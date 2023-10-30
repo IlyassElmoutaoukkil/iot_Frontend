@@ -4,7 +4,7 @@
   "description": "A magical vue admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
-    "watch": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve --watch " ,
+    "watch": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve --watch ",
     "dev": "cross-env NODE_ENV=development vue-cli-service serve",
     "lint": "eslint --ext .js,.vue src",
     "build:prod": "vue-cli-service build",
@@ -16,6 +16,7 @@
     "test:ci": "npm run lint && npm run test:unit"
   },
   "dependencies": {
+    "@vue/composition-api": "^1.7.1",
     "axios": "0.18.1",
     "clipboard": "2.0.4",
     "codemirror": "5.45.0",
@@ -57,6 +58,7 @@
     "chalk": "2.4.2",
     "chokidar": "2.1.5",
     "connect": "3.6.6",
+    "cross-env": "^7.0.3",
     "eslint": "6.7.2",
     "eslint-plugin-vue": "6.2.2",
     "html-webpack-plugin": "3.2.0",

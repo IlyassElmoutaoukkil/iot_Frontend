@@ -13,6 +13,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
+import VueCompositionAPI from '@vue/composition-api'
 
 import './icons' // icon
 import './permission' // permission control
@@ -38,6 +39,7 @@ Vue.use(Element, {
   locale: enLang // 如果使用中文，无需设置，请删除
 })
 
+
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -51,3 +53,4 @@ new Vue({
   store,
   render: h => h(App)
 })
+

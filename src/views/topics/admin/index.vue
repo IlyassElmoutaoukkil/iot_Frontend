@@ -30,7 +30,10 @@ import { fetchIndex, createTopics } from '@/api/topics'
 import { mapGetters } from 'vuex'
 
 const lineChartData = {
-  actualData: [120, 82, 91, 154, 162, 140, 145]
+  read_write: {
+    expectedData: [100, 120, 161, 134, 105, 160, 165],
+    actualData: [120, 82, 91, 154, 162, 140, 145]
+  }
 }
 
 export default {
@@ -44,7 +47,7 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
+      lineChartData: lineChartData.read_write,
       links: {},
       panel: {},
       statistics: {},
