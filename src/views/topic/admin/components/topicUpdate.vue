@@ -2,7 +2,7 @@
   <div>
     <el-dialog v-el-drag-dialog :visible.sync="topicUpdateDialogTableVisible" :title="newTopic.name" width="80%">
       <template>
-        <el-tabs id="update" tab-position="left" stretch="true" v-model="activeName" @tab-click="handleClick">
+        <el-tabs id="update" v-model="activeName" tab-position="left" stretch="true" @tab-click="handleClick">
           <el-tab-pane name="settings" :label="settingsLabel">
             <template>
               <el-alert v-for="error in newTopicErrors.general" :key="error" style="margin-bottom:10px" :title="error" type="error" show-icon />
@@ -315,35 +315,6 @@
         <el-button :loading="loading.security" type="danger" @click="regenerateSecrets()">Regenerate secrets</el-button>
       </span>
     </el-dialog>
-    <el-table :data="topics" ref="table" style="width: 100%;padding-top: 15px;">
-      <el-table-column label="name" min-width="200">
-        <template slot-scope="scope">
-          <router-link :to="'/topic/'+scope.row.id">
-            <svg-icon :icon-class="[scope.row.private == 1 ? 'lock' : 'international']" /> <b> {{ scope.row.name }}</b>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column label="fields" min-width="200">
-        <template slot-scope="scope">
-          {{ scope.row.fields.length }}
-        </template>
-      </el-table-column>
-      <el-table-column label="createdAt" min-width="200">
-        <template slot-scope="scope">
-          {{ new Date(scope.row.createdAt).getDay().toString().padStart(2, '0') + '/' + new Date(scope.row.createdAt).getMonth().toString().padStart(2, '0') + '/' + new Date(scope.row.createdAt).getFullYear().toString().padStart(2, '0') + ' ' + new Date(scope.row.createdAt).getHours().toString().padStart(2, '0') + ':' + new Date(scope.row.createdAt).getMinutes().toString().padStart(2, '0') }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Action">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="manageTopic(scope.row)">Manage</el-button>
-          <el-button size="mini">
-            <router-link :to="{name: 'topic', params: { topic_id : scope.row.id} }">
-              View
-            </router-link>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
   </div>
 </template>
 
@@ -373,6 +344,10 @@ export default {
     links: {
       type: Object,
       required: true
+    },
+    topicUpdateDialogTableVisible: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -383,7 +358,6 @@ export default {
 
       activeSettingsName: 'primary',
       list: null,
-      topicUpdateDialogTableVisible: false,
       oldTopic: {
       },
       newTopic: {
@@ -663,8 +637,6 @@ export default {
   }
 }
 </script>
-
-
 <style>
 #update .el-tabs__content .el-tab-pane .el-tabs--top .el-tabs__nav-wrap .el-tabs__nav-scroll .el-tabs__nav{
   float: right;

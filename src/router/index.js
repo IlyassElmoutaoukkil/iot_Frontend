@@ -96,6 +96,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/topic/',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        component: () => import('@/views/topic/index'),
+        path: ':topic_id',
+        name: 'Topic'
+      }
+    ]
+  },
+  {
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',

@@ -7,6 +7,13 @@ export function fetchIndex() {
   })
 }
 
+export function fetchTopic(id) {
+  return request({
+    url: 'client/topic/show/' + id,
+    method: 'get'
+  })
+}
+
 export function createTopics(data) {
   return request({
     url: '/client/topic/create',
