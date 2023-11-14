@@ -1,61 +1,75 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="8" :lg="4" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Created
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="8" :lg="4" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Fields
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="8" :lg="4" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Entries
-          </div>
-          334
-        </div>
-      </div>
-    </el-col>
+    <el-col :gutter="40">
+      <el-col :xs="24" :sm="24" :lg="24" class="card-panel-col">
+        <el-col :xs="24" :sm="24" :lg="16" class="card-panel-col-details">
+          <h1 class="card-panel-col-details-title">{{ topic.name }}</h1>
+          <el-col class="card-panel-col-details-entry-details">
+
+            <div>
+              <span><b>Created at</b>:</span> {{ createdAt() }} <span />
+            </div>
+            <div>
+              <span><b>Total Entries</b>:</span> {{ lastEntrytime }} <span />
+            </div>
+            <div>
+              <span><b>Last entry id</b>:</span> {{ lastEntryid }} <span />
+            </div>
+            <div>
+              <span><b>Last entry time</b>:</span> {{ totalRecords }} <span />
+            </div>
+
+          </el-col>
+        </el-col>
+        <el-col :xs="24" :sm="24" :lg="8" class="buttons">
+          <el-button type="primary" icon="el-icon-search">
+            Export/Import
+          </el-button>
+          <el-button type="primary" icon="el-icon-search">
+            Settings
+          </el-button>
+          <el-button type="primary" icon="el-icon-search">
+            Wedgets
+          </el-button>
+        </el-col>
+      </el-col>
+    </el-col>    
   </el-row>
+
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
+import moment from 'moment'
 
 export default {
   components: {
     CountTo
   },
   props: {
-    // panel: {
-    //   type: Object,
-    //   required: true
-    // }
+    topic: {
+      type: Object,
+      required: true
+    },
+    lastEntrytime: {
+      type: String,
+      required: true
+    },
+    lastEntryid: {
+      type: String,
+      required: true
+    },
+    totalRecords: {
+      type: String,
+      required: true
+    }
   },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    createdAt() {
+      return moment(this.topic.createdAt).format('DD/MM/YYYY HH:mm')
     }
   }
 }
@@ -64,9 +78,36 @@ export default {
 <style lang="scss" scoped>
 .panel-group {
   margin-top: 18px;
+  padding: 16px;
 
   .card-panel-col {
     margin-bottom: 32px;
+    display: flex;
+    background-color: white;
+    padding:20px;
+
+    .buttons{
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: space-evenly;
+      align-items: flex-end;
+      width: max-content;
+      margin-left: auto;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .card-panel-col-details{
+      .card-panel-col-details-title{
+        margin-top: 0px
+      }
+      .card-panel-col-details-entry-details>div{
+        margin-top: 10px
+      }
+    }
   }
 
   .card-panel {

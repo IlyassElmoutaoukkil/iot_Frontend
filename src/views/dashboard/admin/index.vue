@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-editor-container">  
+  <div class="dashboard-editor-container">
 
     <panel-group :panel="panel" @handleSetLineChartData="handleSetLineChartData" />
 

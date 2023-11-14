@@ -1,23 +1,18 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group :panel="panel" @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group :last-entrytime="last_entry_time" :last-entryid="last_entry_id" :total-records="total_records" :topic="topic" @handleSetLineChartData="handleSetLineChartData" />
     <el-row>
-      <el-col  v-if="dataIn == true" v-for="field in topic.fields" style="padding:16px 16px 0;margin-bottom:32px;" :span="12">
-        <div style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-          <div>
-            <h4 style="margin-bottom:10px; text-align:center">{{ field.value }}</h4>
+      <el-col :gutter="20">
+        <el-col v-if="dataIn == true" v-for="field in topic.fields" style="padding:16px 16px 0;margin-bottom:32px;" :span="12">
+          <div style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+            <div>
+              <h4 style="margin-bottom:10px; text-align:left">{{ field.value }}</h4>
+            </div>
+            <line-chart :chart-value="field.value" :chart-name="field.name" :chart-alldata="data.find((el) => { return el[0] === field.name })[1]" :chart-data="data" />
           </div>
-          <line-chart :chart-value="field.value" :chart-name="field.name" :chart-alldata="data.find((el) => { return el[0] === field.name })[1]" :chart-data="data" />
-        </div>
+        </el-col>
       </el-col>
     </el-row>
-    <!-- <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row> -->
   </div>
 </template>
 
@@ -30,6 +25,7 @@ import topicCreation from './components/topicCreation'
 import { fetchIndex, fetchTopic, createTopics } from '@/api/topics'
 import { retrieveTodayTopicData } from '@/api/data'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'DashboardAdmin',
@@ -45,7 +41,10 @@ export default {
       topic: null,
       chartTiming: 'Minutely', // Minutely, Hourly, daily, weekly, mounthly, yearly
       dataIn: false,
-      data: []
+      data: [],
+      last_entry_time: null,
+      last_entry_id: null,
+      total_records: null
     }
   },
   computed: {
@@ -88,6 +87,11 @@ export default {
     fetchTheData: async function(id) {
       var _this = this
       retrieveTodayTopicData(this.topic.id, this.topic.readSecret).then(async response => {
+
+        _this.last_entry_time = moment(response.topic.last_entry_time).format('DD/MM/YYYY HH:mm')
+        _this.last_entry_id = response.topic.last_entry_id
+        _this.total_records = response.topic.total_records
+
         var i = 0
         _this.data = []
         _this.topic.fields.forEach(f => {
