@@ -6,6 +6,8 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
+import { string } from 'clipboard'
+import moment from 'moment'
 
 export default {
   mixins: [resize],
@@ -26,9 +28,17 @@ export default {
       type: Boolean,
       default: true
     },
-    chartData: {
-      type: Object,
+    chartAlldata: {
+      type: Array,
       required: true
+    },
+    chartData: {
+      type: Array,
+      required: true
+    },
+    chartName: {
+      required: true,
+      type: string
     }
   },
   data() {
@@ -37,10 +47,11 @@ export default {
     }
   },
   watch: {
-    chartData: {
+    chartAlldata: {
       deep: true,
       handler(val) {
-        this.setOptions(val)
+        // alert('asdasd')
+        this.setOptions(this.chartAlldata)
       }
     }
   },
@@ -57,18 +68,36 @@ export default {
     this.chart = null
   },
   methods: {
-    initChart() {
+    async initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
+      this.setOptions(this.chartAlldata)
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions(expectedData) {
       this.chart.setOption({
+        loading: true,
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
+          type: 'time',
+          axisLabel: {
+            formatter: function(value) {
+              let label
+              const now = moment()
+
+              if (moment(value).isSame(new Date(), 'day')) {
+                label = moment(value).format('HH:mm')
+              } else if ((moment(value).isSame(new Date(), 'month')) || (moment(value).isSame(new Date(), 'year'))) {
+                label = moment(value).format('D MMMM HH:mm')
+              } else {
+                label = moment(value).format('DD/MM/Y HH:mm')
+              }
+              // if time is today? 04:50
+              // if time is the same week? Monday 05:33
+              // if time is the same month? 20 april 04:50
+              // if time is the same year? 20 april 04:50
+              // else 20/10/2022 20:30
+              return label
+            }
           }
+
         },
         grid: {
           left: 10,
@@ -79,21 +108,20 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
           padding: [5, 10]
         },
         yAxis: {
-          axisTick: {
-            show: false
+          // axisTick: {
+          //   show: false
+          // }
+        },
+        dataZoom: [
+          {
+            type: 'inside'
           }
-        },
-        legend: {
-          data: ['expected']
-        },
+        ],
         series: [{
-          name: 'expected', itemStyle: {
+          name: this.chartName, itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -102,31 +130,9 @@ export default {
               }
             }
           },
-          smooth: true,
+          smooth: false,
           type: 'line',
           data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
         }]
       })
     }

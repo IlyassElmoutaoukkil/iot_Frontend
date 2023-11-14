@@ -2,13 +2,12 @@
   <div class="dashboard-editor-container">
     <panel-group :panel="panel" @handleSetLineChartData="handleSetLineChartData" />
     <el-row>
-      <el-col v-for="field in topic.fields" style="padding:16px 16px 0;margin-bottom:32px;" :span="12">
+      <el-col  v-if="dataIn == true" v-for="field in topic.fields" style="padding:16px 16px 0;margin-bottom:32px;" :span="12">
         <div style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
           <div>
             <h4 style="margin-bottom:10px; text-align:center">{{ field.value }}</h4>
           </div>
-
-          <line-chart :chart-data="lineChartData" />
+          <line-chart :chart-value="field.value" :chart-name="field.name" :chart-alldata="data.find((el) => { return el[0] === field.name })[1]" :chart-data="data" />
         </div>
       </el-col>
     </el-row>
@@ -29,14 +28,8 @@ import BarChart from './components/BarChart'
 import PieChart from './components/PieChart'
 import topicCreation from './components/topicCreation'
 import { fetchIndex, fetchTopic, createTopics } from '@/api/topics'
+import { retrieveTodayTopicData } from '@/api/data'
 import { mapGetters } from 'vuex'
-
-const lineChartData = {
-  read_write: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165]
-    // actualData: [120, 82, 91, 154, 162, 140, 145]
-  }
-}
 
 export default {
   name: 'DashboardAdmin',
@@ -49,8 +42,10 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.read_write,
-      topic: null
+      topic: null,
+      chartTiming: 'Minutely', // Minutely, Hourly, daily, weekly, mounthly, yearly
+      dataIn: false,
+      data: []
     }
   },
   computed: {
@@ -61,7 +56,7 @@ export default {
 
   },
   created() {
-    this.fetchTopic(this.$route.params.topic_id)
+    this.fetchTheTopic(this.$route.params.topic_id)
   },
   methods: {
     addField() {
@@ -83,10 +78,38 @@ export default {
       this.lineChartData = lineChartData
     },
 
-    fetchTopic(id) {
+    fetchTheTopic(id) {
       fetchTopic(id).then(response => {
         this.topic = response.data
+        this.fetchTheData(id)
       })
+    },
+
+    fetchTheData: async function(id) {
+      var _this = this
+      retrieveTodayTopicData(this.topic.id, this.topic.readSecret).then(async response => {
+        var i = 0
+        _this.data = []
+        _this.topic.fields.forEach(f => {
+          var datax = []
+          response.feeds.forEach((element) => {
+            for (const key in element) {
+              if (key === f.name) {
+                // if record is not today show date
+                datax.push([element.created_at, element[key]])
+              }
+            }
+          })
+          _this.data.push([f.name, datax])
+          i++
+        })
+      })
+
+      _this.dataIn = true
+
+      setTimeout(() => {
+        _this.fetchTheData(id)
+      }, 5000)
     }
   }
 }

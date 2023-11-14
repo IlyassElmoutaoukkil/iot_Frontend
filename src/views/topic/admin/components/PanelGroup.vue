@@ -9,7 +9,6 @@
           <div class="card-panel-text">
             Created
           </div>
-          <count-to :start-val="0" :end-val="panel.topics" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -22,7 +21,6 @@
           <div class="card-panel-text">
             Fields
           </div>
-          <count-to :start-val="0" :end-val="panel.fields" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -35,7 +33,7 @@
           <div class="card-panel-text">
             Entries
           </div>
-          {{ panel.totalRecords }}
+          334
         </div>
       </div>
     </el-col>
@@ -50,10 +48,10 @@ export default {
     CountTo
   },
   props: {
-    panel: {
-      type: Object,
-      required: true
-    }
+    // panel: {
+    //   type: Object,
+    //   required: true
+    // }
   },
   methods: {
     handleSetLineChartData(type) {
