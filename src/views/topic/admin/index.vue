@@ -22,7 +22,7 @@ import LineChart from './components/LineChart'
 import BarChart from './components/BarChart'
 import PieChart from './components/PieChart'
 import topicCreation from './components/topicCreation'
-import { fetchIndex, fetchTopic, createTopics } from '@/api/topics'
+import { fetchIndex, fetchTopic } from '@/api/topics'
 import { retrieveTodayTopicData } from '@/api/data'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -50,14 +50,26 @@ export default {
   computed: {
     ...mapGetters([
       'user',
-      'topics'
+      'topics',
+      'links'
     ])
 
   },
-  created() {
+  mounted() {
     this.fetchTheTopic(this.$route.params.topic_id)
+
+    if (this.links.links == null) {
+      this.fetchIndex()
+    }
   },
   methods: {
+    fetchIndex() {
+      fetchIndex().then(response => {
+        this.$store.dispatch('topics/setTopics', response.data.topics)
+        this.$store.dispatch('links/setLinks', response.data.links)
+        this.$store.dispatch('statistics/setStatistics', response.data.statistics)
+      })
+    },
     addField() {
       // check if fields is more then the plan fields max
       if (this.newTopic.fields.length <= this.user.plan.fields) {

@@ -122,9 +122,13 @@ export default {
       fetchIndex().then(response => {
         console.log(response)
         this.panel = response.data.panel
-        this.$store.dispatch('topics/setTopics', response.data.topics)
         this.statistics = response.data.statistics
         this.links = response.data.links
+
+        this.$store.dispatch('topics/setTopics', response.data.topics)
+        this.$store.dispatch('links/setLinks', response.data.links)
+        this.$store.dispatch('statistics/setStatistics', response.data.statistics)
+
       })
     }
   }

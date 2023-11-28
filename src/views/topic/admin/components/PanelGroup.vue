@@ -1,5 +1,8 @@
 <template>
   <el-row :gutter="40" class="panel-group">
+    <el-dialog v-el-drag-dialog :visible.sync="topicUpdateDialogTableVisible" width="80%">
+      <updateTopic :links="links.links" :topic-update-dialog-table-visible="topicUpdateDialogTableVisible" :topic="topic" :title="topic.name" />
+    </el-dialog>
     <el-col :gutter="40">
       <el-col :xs="24" :sm="24" :lg="24" class="card-panel-col">
         <el-col :xs="24" :sm="24" :lg="16" class="card-panel-col-details">
@@ -10,41 +13,40 @@
               <span><b>Created at</b>:</span> {{ createdAt() }} <span />
             </div>
             <div>
-              <span><b>Total Entries</b>:</span> {{ lastEntrytime }} <span />
+              <span><b>Last entry time</b>:</span> {{ lastEntrytime }} <span />
             </div>
             <div>
               <span><b>Last entry id</b>:</span> {{ lastEntryid }} <span />
             </div>
             <div>
-              <span><b>Last entry time</b>:</span> {{ totalRecords }} <span />
+              <span><b>Total Entries</b>:</span> {{ totalRecords }} <span />
             </div>
 
           </el-col>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="8" class="buttons">
-          <el-button type="primary" icon="el-icon-search">
-            Export/Import
-          </el-button>
-          <el-button type="primary" icon="el-icon-search">
+          <el-button type="primary" icon="el-icon-setting" @click="topicUpdateDialogTableVisible = true">
             Settings
           </el-button>
-          <el-button type="primary" icon="el-icon-search">
+          <el-button type="primary" icon="el-icon-odometer">
             Wedgets
           </el-button>
         </el-col>
       </el-col>
-    </el-col>    
+    </el-col>
   </el-row>
-
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
 import moment from 'moment'
+import updateTopic from './topicUpdate.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    CountTo
+    CountTo,
+    updateTopic
   },
   props: {
     topic: {
@@ -56,13 +58,27 @@ export default {
       required: true
     },
     lastEntryid: {
-      type: String,
+      type: Number,
       required: true
     },
     totalRecords: {
-      type: String,
+      type: Number,
       required: true
     }
+  },
+  data() {
+    return {
+      topicUpdateDialogTableVisible: false
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'user',
+      'topics',
+      'links'
+    ])
+  },
+  mounted() {
   },
   methods: {
     handleSetLineChartData(type) {
