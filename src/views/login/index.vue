@@ -157,8 +157,10 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
+            .then((data) => {
+              console.log('data', data)
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.$store.dispatch('networks/fetchNetworks', this.loginForm)
               this.loading = false
             })
             .catch((e) => {

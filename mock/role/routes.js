@@ -71,15 +71,15 @@ const constantRoutes = [
     ]
   },
   {
-    path: '/guide',
+    path: '/mqtt',
     component: 'layout/Layout',
-    redirect: '/guide/index',
+    redirect: '/mqtt/index',
     children: [
       {
         path: 'index',
-        component: 'views/guide/index',
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
+        component: 'views/mqtt/index',
+        name: 'MQTT',
+        meta: { title: 'MQTT', icon: 'guide', noCache: true }
       }
     ]
   }

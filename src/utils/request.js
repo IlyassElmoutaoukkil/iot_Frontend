@@ -3,6 +3,7 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+var alert = true
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -13,6 +14,10 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    if (config.url.includes("?noalert")) {
+      alert = false
+      config.url = config.url.replace('?noalert', '');
+    }
     // do something before request is sent
 
     if (store.getters.token) {
@@ -48,11 +53,13 @@ service.interceptors.response.use(
     // console.log(response, 'Response')
     // if the custom code is not 20000, it is judged as an error.
     if (response.status !== 200) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+      if (alert) {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
@@ -74,14 +81,32 @@ service.interceptors.response.use(
   },
   error => {
     var time = 1000
-
-    if (error.response.status === 400) {
+    var t = 0
+    if (error.response.status === 400 && alert) {
       error.response.data.errors.forEach(error => {
-        Message({
-          message: error.message,
-          type: 'error',
-          duration: 5 * time
-        })
+        setTimeout(()=>{
+          Message({
+            message: error.message,
+            type: 'error',
+            duration: 2 * time
+          })
+        }, t)
+        t = t + 1000
+        time = time + 2000
+      })
+    }
+
+    if (error.response.status === 403 && alert) {
+      error.response.data.errors.forEach(error => {
+        setTimeout(()=>{
+          Message({
+            message: error.message,
+            type: 'warning',
+            duration: 2 * time
+          })
+        }, t)
+        t = t + 1000
+        time = time + 2000
       })
     }
 

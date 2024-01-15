@@ -47,7 +47,7 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.tokens.accessToken.token)
         setToken(data.tokens.accessToken.token)
-        resolve()
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
@@ -56,8 +56,6 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
-    console.log(state, ' state ')
-
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         var { data } = response

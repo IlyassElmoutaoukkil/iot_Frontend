@@ -49,7 +49,7 @@ export default {
         backgroundColor: '#394056',
         title: {
           top: 20,
-          text: 'Requests',
+          text: 'WWW',
           textStyle: {
             fontWeight: 'normal',
             fontSize: 16,
@@ -71,7 +71,7 @@ export default {
           itemWidth: 14,
           itemHeight: 5,
           itemGap: 13,
-          data: ['CMCC', 'CTCC', 'CUCC'],
+          data: ['CMCC', 'CTCC', 'CUCC', 'KJKLAS'],
           right: '4%',
           textStyle: {
             fontSize: 12,
@@ -208,6 +208,40 @@ export default {
                 color: 'rgba(219, 50, 51, 0)'
               }], false),
               shadowColor: 'rgba(0, 0, 0, 0.1)',
+              shadowBlur: 10
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: 'rgb(219,50,51)',
+              borderColor: 'rgba(219,50,51,0.2)',
+              borderWidth: 12
+            }
+          },
+          data: [220, 182, 125, 145, 122, 191, 134, 150, 120, 110, 165, 122]
+        },
+        , {
+          name: 'KJKLAS',
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 5,
+          showSymbol: false,
+          lineStyle: {
+            normal: {
+              width: 1
+            }
+          },
+          areaStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(219, 50, 51, 0.5)'
+              }, {
+                offset: 0.8,
+                color: 'rgba(219, 50, 51, 1)'
+              }], false),
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
               shadowBlur: 10
             }
           },

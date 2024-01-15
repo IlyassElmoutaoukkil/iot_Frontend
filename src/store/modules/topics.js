@@ -1,3 +1,4 @@
+import { fetchTopics } from '@/api/topics'
 
 const state = {
   topics: {
@@ -70,6 +71,27 @@ const actions = {
 
   setTopics({ commit }, data) {
     commit('SET_TOPICS', data)
+  },
+
+  fetchTopics({ commit }, data) {
+    console.log(state, ' state ')
+
+    return new Promise((resolve, reject) => {
+      fetchTopics().then(response => {
+        console.log('response', response)
+        if (!response) {
+          reject('Verification failed, please Login again.')
+        }
+
+        console.log('data.user.topics', response);
+        commit('SET_TOPICS', response.topics)
+        // var data2 = {avatar: "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+        // introduction:"I am a super administrator",name:"Super Admin",roles:['admin']}
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

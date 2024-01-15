@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function fetchTopics() {
+  return request({
+    url: 'client/topic/',
+    method: 'get'
+  })
+}
+
 export function fetchIndex() {
   return request({
     url: 'client/topic/index',

@@ -1,19 +1,24 @@
 <template>
-  <div class="dashboard-editor-container">
-    <panel-group :last-entrytime="last_entry_time" :last-entryid="last_entry_id" :total-records="total_records" :topic="topic" @handleSetLineChartData="handleSetLineChartData" />
-    <el-row>
-      <el-col :gutter="20">
-        <el-col v-if="dataIn == true" v-for="field in topic.fields" style="padding:16px 16px 0;margin-bottom:32px;" :span="12">
-          <div style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-            <div>
-              <h4 style="margin-bottom:10px; text-align:left">{{ field.value }}</h4>
+  <div>
+    <div v-if="true" v-loading="'loading'" style="position: absolute;top: 50%;left: 50%;"/>
+
+    <div v-if="dataIn == true" class="dashboard-editor-container">
+      <panel-group :last-entrytime="last_entry_time" :last-entryid="last_entry_id" :total-records="total_records" :topic="topic" @handleSetLineChartData="handleSetLineChartData" />
+      <el-row>
+        <el-col v-if="dataIn == true" :gutter="20">
+          <el-col v-for="field in topic.fields" :key="field" style="padding:16px 16px 0;margin-bottom:32px;" :span="12">
+            <div style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+              <div>
+                <h4 style="margin-bottom:10px; text-align:left">{{ field.value }}</h4>
+              </div>
+              <line-chart :chart-value="field.value" :chart-name="field.name" :chart-alldata="data.find((el) => { return el[0] === field.name })[1]" :chart-data="data" />
             </div>
-            <line-chart :chart-value="field.value" :chart-name="field.name" :chart-alldata="data.find((el) => { return el[0] === field.name })[1]" :chart-data="data" />
-          </div>
+          </el-col>
         </el-col>
-      </el-col>
-    </el-row>
+      </el-row>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -98,6 +103,7 @@ export default {
 
     fetchTheData: async function(id) {
       var _this = this
+
       retrieveTodayTopicData(this.topic.id, this.topic.readSecret).then(async response => {
 
         _this.last_entry_time = moment(response.topic.last_entry_time).format('DD/MM/YYYY HH:mm')

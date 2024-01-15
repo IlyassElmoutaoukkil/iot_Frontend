@@ -508,6 +508,7 @@ export default {
 
     deleteTopic() {
       this.$prompt('Password', 'Topic delete confirmation', {
+        inputType: 'password',
         confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel',
         inputErrorMessage: 'Password Incorrect'

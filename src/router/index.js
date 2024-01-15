@@ -104,19 +104,53 @@ export const constantRoutes = [
         component: () => import('@/views/topic/index'),
         path: ':topic_id',
         name: 'Topic'
+      },
+      {
+        component: () => import('@/views/topic/chart'),
+        path: ':topic_id/chart',
+        name: 'Chart'
       }
     ]
   },
   {
-    path: '/guide',
+    path: '/mqtt',
     component: Layout,
-    redirect: '/guide/index',
+    redirect: '/mqtt/index',
+    alwaysShow: true, // will always show the root menu
+    name: 'MQTT',
+    meta: {
+      title: 'MQTT',
+      icon: 'mqtt',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
     children: [
       {
         path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
+        component: () => import('@/views/mqtt/index'),
+        name: 'NewMqtt',
+        meta: {
+          title: 'Networks'
+          // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/mqtt/new_mqtt'),
+        name: 'NewMqtt',
+        meta: {
+          title: 'New Network'
+          // if do not set roles, means: this page does not require permission
+        }
+      },
+      {
+        component: () => import('@/views/mqtt/show_mqtt'),
+        path: ':network_id',
+        name: 'Network'
+      },
+      {
+        component: () => import('@/views/mqtt/edit_mqtt'),
+        path: 'edit/:network_id',
+        name: 'Network'
       }
     ]
   },

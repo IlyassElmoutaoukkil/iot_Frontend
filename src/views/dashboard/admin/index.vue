@@ -19,6 +19,7 @@
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import TransactionTable from './components/TransactionTable'
+import { mapGetters } from 'vuex'
 import { fetchIndex } from '@/api/client'
 
 const lineChartData = {
@@ -40,6 +41,11 @@ export default {
       dailyRecords: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'topics'
+    ])
+  },
   created() {
     this.fetchIndex()
   },
@@ -52,8 +58,10 @@ export default {
       fetchIndex().then(response => {
         console.log(response)
         this.panel = response.data.panel
-        this.$store.commit('user/SET_TOPICS', response.data.topics)
-        this.$store.commit('topics/SET_TOPICS', response.data.topics)
+        if (this.topics.length < 1) {
+          this.$store.commit('user/SET_TOPICS', response.data.topics)
+          this.$store.commit('topics/SET_TOPICS', response.data.topics)
+        }
         this.subscriptions = response.data.subscriptions
         this.dailyRecords = response.data.dailyRecordsCount
         this.lineChart = this.dailyRecords
